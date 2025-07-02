@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+###  Segurança ###
+# Arquivos de configuração do banco de dados
+.env
