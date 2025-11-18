@@ -1,8 +1,10 @@
 package com.example.Tasks.Repo;
-import com.example.Tasks.Model.Tasks;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TasksRepository extends CrudRepository<Tasks, Long> {
-    // Additional query methods can be defined here if needed
+import com.example.Tasks.Model.Tasks;
+
+
+public interface TasksRepository extends JpaRepository<Tasks, Long> {
+    
 
 }
