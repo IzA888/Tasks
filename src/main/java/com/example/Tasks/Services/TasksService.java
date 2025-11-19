@@ -1,4 +1,6 @@
 package com.example.Tasks.Services;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.example.Tasks.Model.Tasks;
@@ -14,14 +16,16 @@ public class TasksService implements ITasksService {
 
     @Override
     public Iterable<Tasks> list() {
-        // This method will return a list of tasks
-        return tasksRepository.findAll();
+        if (!tasksRepository.findAll().isEmpty()) {
+            return tasksRepository.findAll();            
+        } else {
+            throw new RuntimeException("Sem tasks salvas");
+        }
     }
 
     @Override
     @Transactional
     public Tasks save(Tasks tasks) {
-        // This method will save a task
         if (tasks != null) {
             return tasksRepository.save(tasks);
         } else {
@@ -32,11 +36,27 @@ public class TasksService implements ITasksService {
     @Override
     @Transactional
     public Tasks update(Long id, Tasks tasks) {
-        if(tasksRepository.findById(id).isPresent()){
+        if (tasksRepository.findById(id).isPresent()) {
             return tasksRepository.save(tasks);
         } else {
             throw new RuntimeException();
         }
     }
+
+    @Override
+    public Optional<Tasks> findById(Long id) {
+        if (tasksRepository.existsById(id)) {
+            return tasksRepository.findById(id);
+        } else {
+            throw new RuntimeException("Tasks não existe");
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+        tasksRepository.deleteById(id);
+    }
+    
+
 
 }
