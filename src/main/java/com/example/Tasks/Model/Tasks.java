@@ -30,6 +30,10 @@ public class Tasks {
         this.completed = completed;
     }
 
+    public Tasks() {
+        //TODO Auto-generated constructor stub
+    }
+
     public Long getId() {
         return id;
     }

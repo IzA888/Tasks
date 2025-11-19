@@ -1,4 +1,5 @@
 package com.example.Tasks.Services;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class TasksService implements ITasksService {
 
 
     @Override
-    public Iterable<Tasks> list() {
+    public List<Tasks> list() {
         if (!tasksRepository.findAll().isEmpty()) {
             return tasksRepository.findAll();            
         } else {

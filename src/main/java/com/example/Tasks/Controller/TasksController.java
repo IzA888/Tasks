@@ -2,6 +2,8 @@ package com.example.Tasks.Controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Tasks.Controller.factory.TasksFactory;
+import com.example.Tasks.DTO.TasksDto;
 import com.example.Tasks.Model.Tasks;
 import com.example.Tasks.Services.ITasksService;
 
@@ -24,25 +28,26 @@ public class TasksController {
     @Autowired
     private ITasksService tasksService;
 
+    private TasksFactory factory;
+
     @GetMapping(value = {"", "/"})
-    public Iterable<Tasks> list() {
-        return tasksService.list(); 
+    public  ResponseEntity<Iterable<TasksDto>> list() {
+        return ResponseEntity.ok().body(factory.toDto(tasksService.list())); 
     }
 
     @PostMapping(value = {"/save"})
-    public Tasks save(@RequestBody Tasks task) {
-        // This method will save a task
-        return tasksService.save(task);
+    public ResponseEntity<TasksDto> save(@Validated @RequestBody TasksDto task) {
+        return ResponseEntity.ok().body(factory.toDto(tasksService.save(factory.toEntity(task))));
     }
     
     @PutMapping("/{id}")
-    public Tasks update(@PathVariable Long id, @RequestBody Tasks tasks) {
-        return tasksService.update(id, tasks);
+    public ResponseEntity<TasksDto> update(@Validated @PathVariable Long id, @RequestBody TasksDto tasks) {
+        return  ResponseEntity.ok().body(factory.toDto(tasksService.update(id, factory.toEntity(tasks))));
     }
 
     @GetMapping("/{id}")
-    public Optional<Tasks> getById(@RequestParam Long id) {
-        return tasksService.findById(id);
+    public ResponseEntity<Optional<TasksDto>> getById(@RequestParam Long id) {
+        return ResponseEntity.ok().body(factory.toDto(tasksService.findById(id)));
     }
     
     @DeleteMapping("/{id}")
