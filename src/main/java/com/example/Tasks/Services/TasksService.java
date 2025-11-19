@@ -39,7 +39,7 @@ public class TasksService implements ITasksService {
         if (tasksRepository.findById(id).isPresent()) {
             return tasksRepository.save(tasks);
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException("Task não encontrada");
         }
     }
 
@@ -48,13 +48,17 @@ public class TasksService implements ITasksService {
         if (tasksRepository.existsById(id)) {
             return tasksRepository.findById(id);
         } else {
-            throw new RuntimeException("Tasks não existe");
+            throw new RuntimeException("Tasks não encontrada");
         }
     }
 
     @Override
     public void delete(Long id) {
-        tasksRepository.deleteById(id);
+        if (tasksRepository.existsById(id)) {
+            tasksRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Task não encontrada");
+        }
     }
     
 

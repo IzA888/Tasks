@@ -41,7 +41,7 @@ http://localhost:8080/api/tasks
 ### 1. Listar todas as tasks
 
 ```
-GET /api/tasks
+GET /tasks
 ```
 
 **Resposta 200 OK**
@@ -64,7 +64,7 @@ GET /api/tasks
 ### 2. Buscar task por ID
 
 ```
-GET /api/tasks/{id}
+GET /tasks/{id}
 ```
 
 **Parâmetros**
@@ -97,7 +97,7 @@ GET /api/tasks/{id}
 ### 3. Criar uma nova task
 
 ```
-POST /api/tasks
+POST /tasks
 ```
 
 **Body (JSON)**
@@ -128,7 +128,7 @@ POST /api/tasks
 ### 4. Atualizar uma task
 
 ```
-PUT /api/tasks/{id}
+PUT /tasks/{id}
 ```
 
 **Parâmetros**
@@ -171,7 +171,7 @@ PUT /api/tasks/{id}
 ### 5. Deletar uma task
 
 ```
-DELETE /api/tasks/{id}
+DELETE /tasks/{id}
 ```
 
 **Parâmetros**
@@ -212,7 +212,7 @@ DELETE /api/tasks/{id}
 **Criar task**
 
 ```bash
-curl -X POST http://localhost:8080/api/tasks \
+curl -X POST http://localhost:8080/tasks \
 -H "Content-Type: application/json" \
 -d '{"title": "Estudar", "description": "Ler capítulo 3", "completed": false}'
 ```
@@ -220,13 +220,13 @@ curl -X POST http://localhost:8080/api/tasks \
 **Listar tasks**
 
 ```bash
-curl http://localhost:8080/api/tasks
+curl http://localhost:8080/tasks
 ```
 
 **Atualizar task**
 
 ```bash
-curl -X PUT http://localhost:8080/api/tasks/1 \
+curl -X PUT http://localhost:8080/tasks/1 \
 -H "Content-Type: application/json" \
 -d '{"title": "Estudar Java", "completed": true}'
 ```
@@ -234,7 +234,7 @@ curl -X PUT http://localhost:8080/api/tasks/1 \
 **Deletar task**
 
 ```bash
-curl -X DELETE http://localhost:8080/api/tasks/1
+curl -X DELETE http://localhost:8080/tasks/1
 ```
 
 ---
