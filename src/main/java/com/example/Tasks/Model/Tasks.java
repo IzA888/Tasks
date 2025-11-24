@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Tasks {
@@ -22,6 +24,10 @@ public class Tasks {
 
     @Column(name="completed")
     private boolean completed;
+
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
     
     public Tasks(Long id, String name, LocalDate data, boolean completed) {
         this.id = id;
@@ -31,7 +37,6 @@ public class Tasks {
     }
 
     public Tasks() {
-        //TODO Auto-generated constructor stub
     }
 
     public Long getId() {
@@ -57,6 +62,14 @@ public class Tasks {
     }
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
    
 

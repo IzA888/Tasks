@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Tasks.Model.Tasks;
 import com.example.Tasks.Repo.TasksRepository;
+import com.example.Tasks.Services.Interface.ITasksService;
 
 import jakarta.transaction.Transactional;
 
@@ -17,8 +18,8 @@ public class TasksService implements ITasksService {
 
     @Override
     public List<Tasks> list() {
-        if (!tasksRepository.findAll().isEmpty()) {
-            return tasksRepository.findAll();            
+        if (!tasksRepository.findAllByUser(String username).isEmpty()) {
+            return tasksRepository.findAllByUser(String username);            
         } else {
             throw new RuntimeException("Sem tasks salvas");
         }
@@ -30,7 +31,7 @@ public class TasksService implements ITasksService {
         if (tasks != null) {
             return tasksRepository.save(tasks);
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException("Erro ao salvar task");
         }
     }
 

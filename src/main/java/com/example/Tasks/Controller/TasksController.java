@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Tasks.Controller.factory.TasksFactory;
 import com.example.Tasks.DTO.TasksDto;
-import com.example.Tasks.Model.Tasks;
-import com.example.Tasks.Services.ITasksService;
+import com.example.Tasks.Services.Interface.ITasksService;
 
 
 
@@ -51,8 +50,10 @@ public class TasksController {
     }
     
     @DeleteMapping("/{id}")
-    public void deleteById(@RequestBody Long id) {        
+    public ResponseEntity<String> deleteById(@RequestBody Long id) {        
         tasksService.delete(id);
+        return ResponseEntity.ok("Apagado");
+
     }
     
 }
