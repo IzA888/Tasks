@@ -31,7 +31,7 @@ O backend utiliza **Spring Boot + JPA + PostgreSQL**, com endpoints REST consumi
 ## 🌐 Base URL
 
 ```
-http://localhost:8080/api/tasks
+http://localhost:8080/tasks
 ```
 
 ---
