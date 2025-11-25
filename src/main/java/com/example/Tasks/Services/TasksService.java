@@ -2,6 +2,8 @@ package com.example.Tasks.Services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.Tasks.Model.Tasks;
@@ -15,11 +17,21 @@ public class TasksService implements ITasksService {
 
     private TasksRepository tasksRepository;
 
+    private String getUsusarioLogado(){   
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null ){
+            return auth.getName();
+        } else {
+            throw new IllegalStateException("Nenhum usuário autenticado");
+        } 
+    }
+
 
     @Override
     public List<Tasks> list() {
-        if (!tasksRepository.findAllByUser(String username).isEmpty()) {
-            return tasksRepository.findAllByUser(String username);            
+        String username = getUsusarioLogado();
+        if (!tasksRepository.findAllByUserUsername(username).isEmpty()) {
+            return tasksRepository.findAllByUserUsername(username);            
         } else {
             throw new RuntimeException("Sem tasks salvas");
         }
