@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Tasks.DTO.UserDto;
@@ -19,6 +20,7 @@ import com.example.Tasks.Services.UserService;
 
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     private UserFactory factory;
@@ -26,22 +28,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user/save")
+    @PostMapping("/save")
     public ResponseEntity<UserDto> createUser(@Validated @RequestBody UserDto user){
         return ResponseEntity.status(HttpStatus.CREATED).body(factory.toDto(userService.createUser(factory.toEntity(user))));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok().body(factory.toDto(userService.getById(id)));
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Validated @RequestBody UserDto user) {
        return  ResponseEntity.ok().body(factory.toDto(userService.updateUser(id, factory.toEntity(user))));
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
        return ResponseEntity.ok("Apagado");
