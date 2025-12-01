@@ -55,7 +55,7 @@ public class WebSecurity {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/user/save").permitAll()
-                .requestMatchers(HttpMethod.POST, "user/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationManager(authenticationManager)
@@ -68,7 +68,7 @@ public class WebSecurity {
                 .httpOnly(false)
                 .path("/")
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("Lax")
             );
         return repo;
     }
@@ -84,6 +84,7 @@ public class WebSecurity {
         source.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         source.setAllowedHeaders(List.of("*"));
         source.setAllowCredentials(true);
+        source.setExposedHeaders(List.of("XSRF-TOKEN", "Authorization"));
        
         UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
         corsSource.registerCorsConfiguration("/**", source);
