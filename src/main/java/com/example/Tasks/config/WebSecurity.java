@@ -31,11 +31,15 @@ public class WebSecurity {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository repo){
-        return username -> repo.findByUsername(username)
-            .map(user -> User.withUsername(user.getUsername())
+        return username -> {
+            var user = repo.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+         
+            return User.withUsername(user.getUsername())
             .password(user.getPassword())
-            .build())
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .build();
+        };
+        
     }
 
     @Bean
@@ -50,7 +54,7 @@ public class WebSecurity {
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository())
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/user/save").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
@@ -65,7 +69,7 @@ public class WebSecurity {
             repo.setCookieCustomizer(cookie -> cookie
                 .httpOnly(false)
                 .path("/")
-                .secure(true)
+                .secure(false)
                 .sameSite("Lax")
             );
         return repo;

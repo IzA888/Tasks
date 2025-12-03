@@ -67,7 +67,7 @@ public class UserService implements IUserService{
 
     @Override
     public Optional<User> getByUsername(String username) {
-        if(userRepository.findByUsername(username) != null){
+        if(username != null){
            return userRepository.findByUsername(username);
         } else { 
             throw new RuntimeException("Usuário não encontrado");

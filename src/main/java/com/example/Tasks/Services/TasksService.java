@@ -2,6 +2,7 @@ package com.example.Tasks.Services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,18 +16,21 @@ import jakarta.transaction.Transactional;
 @Service
 public class TasksService implements ITasksService {
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
     private TasksRepository tasksRepository;
 
     private String getUsusarioLogado(){   
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth != null ){
-            return auth.getName();
-        } else {
+        if(auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")){
             throw new IllegalStateException("Nenhum usuário autenticado");
         } 
+        return auth.getName();
     }
 
-
+    
     @Override
     public List<Tasks> list() {
         String username = getUsusarioLogado();
@@ -40,7 +44,9 @@ public class TasksService implements ITasksService {
     @Override
     @Transactional
     public Tasks save(Tasks tasks) {
+        String username = getUsusarioLogado();
         if (tasks != null) {
+            tasks.setUser(userService.getByUsername(username).get());
             return tasksRepository.save(tasks);
         } else {
             throw new RuntimeException("Erro ao salvar task");
