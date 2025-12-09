@@ -3,6 +3,9 @@ package com.example.Tasks.Services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,7 @@ import com.example.Tasks.Services.Interface.IUserService;
 import jakarta.transaction.Transactional;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService, UserDetailsService{
 
     @Autowired
     private UserRepository userRepository;
@@ -72,6 +75,12 @@ public class UserService implements IUserService{
         } else { 
             throw new RuntimeException("Usuário não encontrado");
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
     
 }

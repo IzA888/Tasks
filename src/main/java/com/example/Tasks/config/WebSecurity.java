@@ -2,6 +2,7 @@ package com.example.Tasks.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,37 +11,21 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.example.Tasks.Repo.UserRepository;
-
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity {
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository repo){
-        return username -> {
-            var user = repo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-         
-            return User.withUsername(user.getUsername())
-            .password(user.getPassword())
-            .build();
-        };
-        
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -48,8 +33,8 @@ public class WebSecurity {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        return http
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
+        return http 
             .cors(cors -> cors.configurationSource(corsConfigurationSoucer()))
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository())
@@ -60,7 +45,7 @@ public class WebSecurity {
                 .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated()
             )
-            .authenticationManager(authenticationManager)
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     } 
 
@@ -69,8 +54,8 @@ public class WebSecurity {
             repo.setCookieCustomizer(cookie -> cookie
                 .httpOnly(false)
                 .path("/")
-                .secure(false)
-                .sameSite("Lax")
+                .secure(true)
+                .sameSite("Strict")
             );
         return repo;
     }
