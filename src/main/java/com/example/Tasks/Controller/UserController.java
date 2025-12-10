@@ -38,6 +38,11 @@ public class UserController {
         return ResponseEntity.ok().body(factory.toDto(userService.getById(id)));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getUserLogado(){
+        return ResponseEntity.ok().body(factory.toDto(userService.getUserLogado()));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Validated @RequestBody UserDto user) {
        return  ResponseEntity.ok().body(factory.toDto(userService.updateUser(id, factory.toEntity(user))));

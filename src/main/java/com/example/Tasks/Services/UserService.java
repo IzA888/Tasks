@@ -3,6 +3,7 @@ package com.example.Tasks.Services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -80,6 +81,20 @@ public class UserService implements IUserService, UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public User getUserLogado(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String nome = null;
+
+        if(principal instanceof UserDetails){
+           nome = ((UserDetails) principal).getUsername();
+        } else {
+            principal.toString();
+        }
+
+        return userRepository.findByUsername(nome)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
     
