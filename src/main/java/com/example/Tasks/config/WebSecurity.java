@@ -2,7 +2,6 @@ package com.example.Tasks.config;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,11 +20,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurity {
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -38,6 +35,8 @@ public class WebSecurity {
             .cors(cors -> cors.configurationSource(corsConfigurationSoucer()))
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository())
+                .ignoringRequestMatchers("/user/login")
+                .ignoringRequestMatchers("/user/save")
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
             .authorizeHttpRequests(auth -> auth
@@ -54,7 +53,7 @@ public class WebSecurity {
             repo.setCookieCustomizer(cookie -> cookie
                 .httpOnly(false)
                 .path("/")
-                .secure(true)
+                .secure(false)
                 .sameSite("Strict")
             );
         return repo;

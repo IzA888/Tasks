@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Tasks.DTO.UserDto;
 
 import com.example.Tasks.Controller.factory.UserFactory;
+import com.example.Tasks.Services.JwtService;
 import com.example.Tasks.Services.UserService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -27,6 +30,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
 
     @PostMapping("/save")
     public ResponseEntity<UserDto> createUser(@Validated @RequestBody UserDto user){
@@ -40,6 +44,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getUserLogado(){
+        System.out.println("getUsuarioLogado");
         return ResponseEntity.ok().body(factory.toDto(userService.getUserLogado()));
     }
 

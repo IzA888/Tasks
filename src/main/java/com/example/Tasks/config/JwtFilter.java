@@ -28,9 +28,13 @@ public class JwtFilter extends OncePerRequestFilter{
     @Lazy
     private final UserDetailsService userDetailsService;
 
-    public JwtFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    @Autowired
+    private final AuthSuccessHandler successHandler;
+
+    public JwtFilter(JwtService jwtService, UserDetailsService userDetailsService, AuthSuccessHandler successHandler) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class JwtFilter extends OncePerRequestFilter{
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                successHandler.onAuthenticationSuccess(request, response, authToken);
             }
         }
 
