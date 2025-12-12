@@ -46,6 +46,7 @@ public class JwtFilter extends OncePerRequestFilter{
 
         if(path.startsWith("/user/save") || path.startsWith("/user/login")){
             filterChain.doFilter(request, response);
+            return;
         }
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {

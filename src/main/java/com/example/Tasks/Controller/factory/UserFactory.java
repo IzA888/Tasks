@@ -2,9 +2,12 @@ package com.example.Tasks.Controller.factory;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.example.Tasks.DTO.UserDto;
 import com.example.Tasks.Model.User;
 
+@Component
 public class UserFactory {
     
     public UserDto toDto(User user) {

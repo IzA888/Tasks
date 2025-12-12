@@ -27,6 +27,7 @@ public class TasksController {
     @Autowired
     private ITasksService tasksService;
 
+    @Autowired
     private TasksFactory factory;
 
     @GetMapping(value = {"", "/"})

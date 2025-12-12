@@ -3,9 +3,12 @@ package com.example.Tasks.Controller.factory;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.example.Tasks.DTO.TasksDto;
 import com.example.Tasks.Model.Tasks;
 
+@Component
 public class TasksFactory {
 
     public TasksDto toDto(Tasks tasks) {

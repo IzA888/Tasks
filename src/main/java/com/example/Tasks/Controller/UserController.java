@@ -13,28 +13,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Tasks.DTO.UserDto;
-
 import com.example.Tasks.Controller.factory.UserFactory;
-import com.example.Tasks.Services.JwtService;
+import com.example.Tasks.DTO.UserDto;
+import com.example.Tasks.Services.AuthService;
 import com.example.Tasks.Services.UserService;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
     private UserFactory factory;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
+
 
     @PostMapping("/save")
     public ResponseEntity<UserDto> createUser(@Validated @RequestBody UserDto user){
         return ResponseEntity.status(HttpStatus.CREATED).body(factory.toDto(userService.createUser(factory.toEntity(user))));
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Validated @RequestBody UserDto user) {
+        authService.login(factory.toEntity(user));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
