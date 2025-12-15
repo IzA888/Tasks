@@ -1,6 +1,7 @@
 package com.example.Tasks.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -39,9 +40,9 @@ public class UserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody UserDto user) {
-        authService.login(factory.toEntity(user));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> login(@Validated @RequestBody UserDto user) throws Exception {
+        String token = authService.login(user.getUsername(), user.getPassword());
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
     }
 
     @GetMapping("/{id}")
@@ -51,7 +52,6 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getUserLogado(){
-        System.out.println("getUsuarioLogado");
         return ResponseEntity.ok().body(factory.toDto(userService.getUserLogado()));
     }
 

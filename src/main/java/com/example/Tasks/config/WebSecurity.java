@@ -32,13 +32,13 @@ public class WebSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         return http 
-            //.cors(cors -> cors.configurationSource(corsConfigurationSoucer()))
+            .cors(cors -> cors.configurationSource(corsConfigurationSoucer()))
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository())
                 .ignoringRequestMatchers("/user/login")
                 .ignoringRequestMatchers("/user/save")
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/user/save").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/login").permitAll()

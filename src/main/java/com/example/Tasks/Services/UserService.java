@@ -3,8 +3,6 @@ package com.example.Tasks.Services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,7 +31,8 @@ public class UserService implements IUserService, UserDetailsService{
     @Override
     @Transactional
     public User createUser(User user) {
-        if(userRepository.findByUsername(user.getUsername()) == null){
+        
+        if(!userRepository.findByUsername(user.getPassword()).isPresent()){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
            return userRepository.save(user);
         } else { 

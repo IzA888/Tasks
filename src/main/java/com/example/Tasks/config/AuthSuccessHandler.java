@@ -28,7 +28,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler{
 
         response.setHeader("Authorization", "Bearer " + token);
         response.setStatus(HttpServletResponse.SC_OK);
-        System.out.println("Bearer " + token);
     }
     
     
