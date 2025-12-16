@@ -31,7 +31,7 @@ public class WebSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
-        return http 
+        return http
             .cors(cors -> cors.configurationSource(corsConfigurationSoucer()))
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository())
@@ -54,7 +54,7 @@ public class WebSecurity {
                 .httpOnly(false)
                 .path("/")
                 .secure(false)
-                .sameSite("Strict")
+                .sameSite("Lax")
             );
         return repo;
     }

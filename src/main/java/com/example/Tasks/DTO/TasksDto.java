@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ public class TasksDto {
 
     @NotNull(value = "Titulo não pode ser vazio")
     private String name;
+    @JsonFormat(pattern="dd/MM/yyyy")
     private LocalDate date;
     private Boolean completed = false;
 }
