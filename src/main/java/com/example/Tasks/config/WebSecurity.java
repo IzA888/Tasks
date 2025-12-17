@@ -33,8 +33,13 @@ public class WebSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         return http
             .cors(cors -> cors.configurationSource(corsConfigurationSoucer()))
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository())
+                .csrfTokenRequestHandler((request, response, supplier) -> {
+                    supplier.get();
+                    request.getHeader("X-XSRF-TOKEN");
+                })
                 .ignoringRequestMatchers("/user/login")
                 .ignoringRequestMatchers("/user/save")
             )
@@ -44,7 +49,6 @@ public class WebSecurity {
                 .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     } 
 
