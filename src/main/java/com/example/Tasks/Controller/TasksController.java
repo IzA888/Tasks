@@ -46,12 +46,12 @@ public class TasksController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<TasksDto>> getById(@RequestParam Long id) {
+    public ResponseEntity<Optional<TasksDto>> getById(@PathVariable Long id) {
         return ResponseEntity.ok().body(factory.toDto(tasksService.findById(id)));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@RequestBody Long id) {        
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {        
         tasksService.delete(id);
         return ResponseEntity.ok("Apagado");
 

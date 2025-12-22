@@ -13,6 +13,7 @@ public class UserFactory {
     public UserDto toDto(User user) {
         UserDto dto = new UserDto();
 
+        dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword());
         return dto;
@@ -21,6 +22,7 @@ public class UserFactory {
     public User toEntity(UserDto dto) {
         User user = new User();
 
+        user.setId(dto.getId());
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
         return user;
@@ -28,7 +30,8 @@ public class UserFactory {
 
     public UserDto toDto(Optional<User> user) {
         UserDto dto = new UserDto();
-
+        
+        dto.setId(user.get().getId());
         dto.setUsername(user.get().getUsername());
         dto.setPassword(user.get().getPassword());
         return dto;

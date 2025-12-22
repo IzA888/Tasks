@@ -13,6 +13,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+
+    private Long id;
+
     @NotNull(value = "Username não pode estar vazio")
     private String username;
 

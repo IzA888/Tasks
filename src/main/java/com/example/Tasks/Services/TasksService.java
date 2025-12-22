@@ -56,7 +56,9 @@ public class TasksService implements ITasksService {
     @Override
     @Transactional
     public Tasks update(Long id, Tasks tasks) {
+        String username = getUsusarioLogado();
         if (tasksRepository.findById(id).isPresent()) {
+            tasks.setUser(userService.getByUsername(username).get());
             return tasksRepository.save(tasks);
         } else {
             throw new RuntimeException("Task não encontrada");

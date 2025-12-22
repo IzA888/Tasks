@@ -14,6 +14,7 @@ public class TasksFactory {
     public TasksDto toDto(Tasks tasks) {
         TasksDto dto = new TasksDto();
 
+        dto.setId(tasks.getId());
         dto.setName(tasks.getName());
         dto.setDate(tasks.getData());
         dto.setCompleted(tasks.isCompleted());
@@ -23,7 +24,8 @@ public class TasksFactory {
 
     public Optional<TasksDto> toDto(Optional<Tasks> tasks) {
         Optional<TasksDto> dto = Optional.of(new TasksDto());
-
+        
+        dto.get().setId(tasks.get().getId());
         dto.get().setName(tasks.get().getName());
         dto.get().setDate(tasks.get().getData());
         dto.get().setCompleted(tasks.get().isCompleted());
@@ -33,13 +35,14 @@ public class TasksFactory {
     
     public Iterable<TasksDto> toDto(List<Tasks> tasks) {
         return tasks.stream()
-                .map(task -> new TasksDto(task.getName(), task.getData(), task.isCompleted()))
+                .map(task -> new TasksDto(task.getId(), task.getName(), task.getData(), task.isCompleted()))
                 .toList();
     }
     
     public Tasks toEntity(TasksDto dto) {
         Tasks entity = new Tasks();
     
+        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setData(dto.getDate());
         entity.setCompleted(dto.getCompleted());
