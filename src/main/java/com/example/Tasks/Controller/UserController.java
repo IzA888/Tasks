@@ -40,8 +40,8 @@ public class UserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody UserDto user) throws Exception {
-        String token = authService.login(user.getUsername(), user.getPassword());
+    public ResponseEntity<?> login(@Validated @RequestParam String username, @RequestParam String password) throws Exception {
+        String token = authService.login(username, password);
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
     }
 
