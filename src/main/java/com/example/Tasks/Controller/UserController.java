@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Tasks.Controller.factory.LoginUserFactory;
 import com.example.Tasks.Controller.factory.UserFactory;
+import com.example.Tasks.DTO.LoginUserDto;
 import com.example.Tasks.DTO.UserDto;
 import com.example.Tasks.Services.AuthService;
 import com.example.Tasks.Services.UserService;
@@ -28,6 +30,9 @@ public class UserController {
     private UserFactory factory;
 
     @Autowired
+    private LoginUserFactory loginFactory;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -35,13 +40,13 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<UserDto> createUser(@Validated @RequestBody UserDto user){
-        return ResponseEntity.status(HttpStatus.CREATED).body(factory.toDto(userService.createUser(factory.toEntity(user))));
+    public ResponseEntity<UserDto> createUser(@Validated @RequestBody LoginUserDto user){
+        return ResponseEntity.status(HttpStatus.CREATED).body(factory.toDto(userService.createUser(loginFactory.toEntity(user))));
     }
     
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestParam String username, @RequestParam String password) throws Exception {
-        String token = authService.login(username, password);
+    public ResponseEntity<?> login(@Validated @RequestBody LoginUserDto user) throws Exception {
+        String token = authService.login(user.getUsername(), user.getPassword());
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
     }
 

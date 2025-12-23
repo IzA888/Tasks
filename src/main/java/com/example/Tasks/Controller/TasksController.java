@@ -3,6 +3,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +52,9 @@ public class TasksController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {        
+    public BodyBuilder deleteById(@PathVariable Long id) {        
         tasksService.delete(id);
-        return ResponseEntity.ok("Apagado");
+        return ResponseEntity.ok();
 
     }
     
