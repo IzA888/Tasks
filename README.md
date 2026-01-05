@@ -4,6 +4,214 @@ API RESTful para gerenciamento de **Tasks**, permitindo criar, listar, atualizar
 
 ---
 
+## 1️⃣ Visão Geral
+
+Este backend é responsável por:
+
+* Autenticação de usuários (login e cadastro)
+
+* Geração e validação de JWT
+
+* Proteção contra CSRF/XSRF
+
+* CRUD de tarefas
+
+* Comunicação com o frontend Angular via API REST
+
+## 📌 Tecnologias Utilizadas
+
+- Java 17+
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- JWT (JSON Web Token)
+- CSRF / XSRF Protection
+- Maven
+- Banco de Dados Relacional (PostgreSQL / H2)
+- Hibernate
+
+
+
+## 🏗️ Arquitetura da Aplicação
+
+### 🔹 Tipo de Arquitetura
+
+A aplicação segue o padrão de **Arquitetura em Camadas (Layered Architecture)**, onde cada camada possui responsabilidades bem definidas.
+
+```
+
+Controller
+↓
+Service
+↓
+Repository
+↓
+Banco de Dados
+
+````
+
+
+## 🧩 Camadas do Sistema
+
+### 📍 Controller (Camada de Apresentação)
+
+- Recebe requisições HTTP
+- Valida dados de entrada
+- Retorna respostas HTTP
+- Não contém regras de negócio
+
+Exemplo:
+```java
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody UserDto user) {
+    authService.login(factory.toEntity(user));
+    return ResponseEntity.ok().build();
+}
+````
+
+
+### 🧠 Service (Camada de Negócio)
+
+* Contém as regras de negócio
+* Processa autenticação
+* Gera tokens JWT
+* Coordena acesso aos repositórios
+
+Exemplo:
+
+```java
+authenticationManager.authenticate(
+    new UsernamePasswordAuthenticationToken(username, password)
+);
+```
+
+---
+
+### 🗄️ Repository (Camada de Persistência)
+
+* Acessa o banco de dados
+* Utiliza Spring Data JPA
+* Não contém lógica de negócio
+
+Exemplo:
+
+```java
+Optional<User> findByUsername(String username);
+```
+
+---
+
+### 🧱 Model / Entity
+
+* Representa tabelas do banco de dados
+* Define atributos e relacionamentos
+
+Exemplo:
+
+```java
+@Entity
+public class User {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String username;
+    private String password;
+}
+```
+
+---
+
+### 📦 DTO (Data Transfer Object)
+
+* Transporta dados entre frontend e backend
+* Evita exposição direta das entidades
+
+Exemplo:
+
+```java
+public class UserDto {
+    private String username;
+    private String password;
+}
+```
+
+---
+
+### 🔄 Factory (Mapper)
+
+* Converte DTO ↔ Entity
+* Centraliza a lógica de conversão
+
+Exemplo:
+
+```java
+public User toEntity(UserDto dto) {
+    return new User(dto.getUsername(), dto.getPassword());
+}
+```
+
+---
+
+## 🔐 Segurança
+
+### 🔑 Autenticação
+
+* A aplicação utiliza **JWT (JSON Web Token)**
+* Arquitetura **Stateless** (sem sessão no servidor)
+* O token é enviado no header `Authorization`
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+### 🛡️ CSRF / XSRF
+
+* Proteção contra ataques CSRF
+* Token XSRF armazenado em cookie
+* Enviado no header `X-XSRF-TOKEN`
+* Cookies configurados com `SameSite=Lax`
+
+---
+
+### 🔍 Filtro JWT
+
+* Intercepta requisições
+* Valida o token JWT
+* Define o usuário autenticado no contexto do Spring Security
+
+
+
+## 📁 Estrutura do Projeto
+
+```
+src/main/java
+└── com.example.Tasks
+    ├── Controller
+    ├── Services
+    ├── Repository
+    ├── Security
+    ├── DTO
+    ├── Factory
+    └── Model
+```
+
+
+## 🧱 Padrões de Projeto Utilizados
+
+| Padrão               | Descrição                      |
+| -------------------- | ------------------------------ |
+| Layered Architecture | Separação de responsabilidades |
+| DTO                  | Transporte seguro de dados     |
+| Factory / Mapper     | Conversão de objetos           |
+| Repository Pattern   | Acesso a dados                 |
+| Dependency Injection | Gerenciamento de dependências  |
+| Filter Pattern       | Interceptação de requisições   |
+
+
+
+
 ## ⚡ Como funciona
 
 A API segue o padrão **CRUD** (Create, Read, Update, Delete):
@@ -445,8 +653,3 @@ http.cors().and().csrf().disable();
 ```java
 http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
 ```
-
-Resumo rápido:
-- Use CORS para permitir que o front acesse a API (configurar origens e métodos).
-- Desabilite CSRF em APIs stateless com JWT no header; mantenha CSRF habilitado se depender de cookies/sessões e valide o token CSRF no cliente.
-- Em produção, permitir apenas origens e métodos necessários e usar SameSite/secure cookies quando aplicável.
